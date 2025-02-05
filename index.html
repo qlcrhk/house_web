@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>부자부동산 아파트 분양 홍보</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
+      rel="stylesheet"
+    />
+    <style></style>
+    <link rel="stylesheet" href="./css/index.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="header-container">
+        <a href="/" class="logo">라온부동산</a>
+        <nav>
+          <ul class="nav-menu" id="gnb-menu">
+            <li>
+              <a href="#" class="nav-link">상품</a>
+              <ul class="dropdown-menu">
+                <li><a href="#" class="nav-link">원룸/투룸</a></li>
+                <li><a href="#" class="nav-link">아파트/오피스텔</a></li>
+                <li><a href="#" class="nav-link">주택/빌딩</a></li>
+                <li><a href="#" class="nav-link">상가/토지/업무</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#" class="nav-link">문의하기</a>
+              <ul class="dropdown-menu">
+                <li><a href="#" class="nav-link">구매문의</a></li>
+                <li><a href="#" class="nav-link">판매문의</a></li>
+              </ul>
+            </li>
+            <li><a href="#" class="nav-link">커뮤니티</a></li>
+            <li><a href="#" class="nav-link">로그인</a></li>
+          </ul>
+        </nav>
+        <div class="hamburger-menu" id="hamburger-menu">
+          <div class="hamburger-icon"></div>
+          <div class="hamburger-icon"></div>
+          <div class="hamburger-icon"></div>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero" id="home">
+      <div class="hero-content" data-aos="fade-up">
+        <p class="hero-subtitle">편안하고 안락한 삶의 시작</p>
+        <h1 class="hero-title">집 과 새로운 시작을 이어주는 다리</h1>
+        <button class="cta-button">자세히 알아보기</button>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="main-content">
+        <div class="search-container">
+          <h2 class="section-title">매물을 검색해보세요</h2>
+          <input
+            type="text"
+            placeholder="검색어를 입력하세요"
+            class="search-input"
+          />
+          <button class="search-button">검색</button>
+        </div>
+      </div>
+      <section id="features">
+        <div class="features-grid">
+          <div class="feature-card" data-aos="fade-up">
+            <h3>원룸/투룸</h3>
+            <p>교통, 교육, 문화시설이 모두 가까운 곳에 위치해 있습니다.</p>
+          </div>
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+            <h3>아파트/오피스텔</h3>
+            <p>녹지공간과 함께하는 건강한 주거환경을 제공합니다.</p>
+          </div>
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+            <video src="./video/add.mp4" muted loop autoplay></video>
+          </div>
+          <div class="feature-card" data-aos="fade-up">
+            <h3>상가/업무/토지</h3>
+            <p>교통, 교육, 문화시설이 모두 가까운 곳에 위치해 있습니다.</p>
+          </div>
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+            <h3>주택/빌라</h3>
+            <p>녹지공간과 함께하는 건강한 주거환경을 제공합니다.</p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="latest-properties"
+        class="latest-properties"
+        data-aos="fade-up"
+      >
+        <h2>최신 매물 정보</h2>
+        <div class="property-grid">
+          <script>
+            document.addEventListener("DOMContentLoaded", () => {
+              fetch("http://localhost:3000/api/properties")
+                .then((response) => response.json())
+                .then((data) => {
+                  const propertyGrid = document.querySelector(".property-grid");
+                  propertyGrid.innerHTML = ""; // 기존 매물 초기화
+
+                  data.forEach((property) => {
+                    const card = document.createElement("div");
+                    card.classList.add("property-card");
+                    card.innerHTML = `
+          <img src="${property.image}" alt="${property.title}" />
+          <h3>${property.title}</h3>
+          <p>${property.description}</p>
+        `;
+                    propertyGrid.appendChild(card);
+                  });
+                })
+                .catch((error) =>
+                  console.error("데이터 불러오기 오류:", error)
+                );
+            });
+          </script>
+        </div>
+      </section>
+
+      <section id="contact" class="contact-form" data-aos="fade-up">
+        <h2>상담 문의</h2>
+        <form id="inquiryForm">
+          <div class="form-group">
+            <label for="name">성함</label>
+            <input type="text" id="name" required />
+          </div>
+          <div class="form-group">
+            <label for="phone">연락처</label>
+            <input type="tel" id="phone" required />
+          </div>
+          <div class="form-group">
+            <label for="email">이메일</label>
+            <input type="email" id="email" required />
+          </div>
+          <div class="form-group">
+            <label for="message">문의내용</label>
+            <textarea id="message" rows="4" required></textarea>
+          </div>
+          <button type="submit" class="submit-button">문의하기</button>
+          <div id="successMessage" class="success-message">
+            문의가 성공적으로 접수되었습니다. 감사합니다!
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <footer>
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>부자부동산</h3>
+          <p>최고의 주거 공간을 제공하는 부동산 전문기업</p>
+        </div>
+        <div class="footer-section">
+          <h3>연락처</h3>
+          <p>전화: 02-123-4567</p>
+          <p>이메일: contact@richrealestate.co.kr</p>
+        </div>
+        <div class="footer-section">
+          <h3>주소</h3>
+          <p>서울특별시 강남구 테헤란로 123</p>
+          <p>부자부동산 빌딩 15층</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+      // AOS 초기화
+      AOS.init({
+        duration: 1000,
+        once: true,
+      });
+
+      // 햄버거 메뉴 관련 기능
+      const hamburgerMenu = document.getElementById("hamburger-menu");
+      const navMenu = document.getElementById("gnb-menu");
+
+      function toggleMenu(e) {
+        if (e) {
+          e.stopPropagation(); // 이벤트 버블링 방지
+        }
+        hamburgerMenu.classList.toggle("active");
+        navMenu.classList.toggle("active");
+      }
+
+      // 햄버거 메뉴 클릭 이벤트
+      hamburgerMenu.addEventListener("click", toggleMenu);
+
+      // 외부 클릭시 메뉴 닫기
+      document.addEventListener("click", (e) => {
+        if (
+          navMenu.classList.contains("active") &&
+          !navMenu.contains(e.target) &&
+          !hamburgerMenu.contains(e.target)
+        ) {
+          toggleMenu();
+        }
+      });
+
+      // 모바일 드롭다운 메뉴
+      const dropdownLinks = document.querySelectorAll(".nav-menu > li > a");
+      dropdownLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+          if (window.innerWidth <= 768) {
+            e.preventDefault();
+            const dropdownMenu = link.nextElementSibling;
+            if (dropdownMenu?.classList.contains("dropdown-menu")) {
+              dropdownMenu.style.display =
+                dropdownMenu.style.display === "block" ? "none" : "block";
+            }
+          }
+        });
+      });
+
+      // 문의 폼 제출
+      document
+        .getElementById("inquiryForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const successMessage = document.getElementById("successMessage");
+          successMessage.style.display = "block";
+          this.reset();
+          setTimeout(() => {
+            successMessage.style.display = "none";
+          }, 3000);
+        });
+
+      // CTA 버튼 스크롤
+      document
+        .querySelector(".cta-button")
+        .addEventListener("click", function () {
+          document.querySelector("#contact").scrollIntoView({
+            behavior: "smooth",
+          });
+        });
+
+      // 검색 기능
+      document
+        .querySelector(".search-button")
+        .addEventListener("click", function () {
+          const query = document.querySelector(".search-input").value;
+          console.log("검색어:", query);
+          // 실제 검색 로직을 여기에 추가하세요.
+        });
+    </script>
+  </body>
+</html>

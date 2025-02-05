@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>방 내놓기 폼</title>
+  <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_APP_KEY"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f9f9f9; }
+    header, footer { background-color: #007bff; color: white; text-align: center; padding: 15px 0; }
+    nav a { color: white; margin: 0 15px; text-decoration: none; font-weight: bold; }
+    nav a:hover { text-decoration: underline; }
+    .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h1, h2 { color: #333; }
+    form { display: flex; flex-direction: column; gap: 10px; }
+    label { font-weight: bold; margin-top: 10px; }
+    input, select, textarea { padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
+    .radio-group, .checkbox-group { display: flex; gap: 10px; margin: 5px 0; }
+    button { background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background-color: #0056b3; }
+  </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+          <a href="#" class="logo">라온부동산</a>
+          <nav>
+            <ul class="nav-menu" id="gnb-menu">
+              <li><a href="#" class="nav-link">홈</a></li>
+              <li>
+                <a href="#" class="nav-link">매물</a>
+                <ul class="dropdown-menu">
+                  <li><a href="#" class="nav-link">매매</a></li>
+                  <li><a href="#" class="nav-link">분양</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="nav-link">임대</a>
+                <ul class="dropdown-menu">
+                  <li><a href="#" class="nav-link">전세</a></li>
+                  <li><a href="#" class="nav-link">월세</a></li>
+                </ul>
+              </li>
+              <li><a href="#" class="nav-link">문의</a></li>
+              <li><a href="#" class="nav-link">로그인</a></li>
+            </ul>
+          </nav>
+          <div class="hamburger-menu" id="hamburger-menu" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+          </div>
+        </div>
+      </header>
+
+  <div class="container">
+    <h1>방 내놓기 폼</h1>
+    <form action="/api/add-building" method="POST" enctype="multipart/form-data">
+      <label>매물유형</label>
+      <select name="property_type" required>
+        <option value="주택/빌라">주택/빌라(원투쓰리룸)</option>
+        <option value="오피스텔">오피스텔</option>
+        <option value="아파트">아파트</option>
+        <option value="상가">상가</option>
+      </select>
+    
+      <label>매물 주소</label>
+      <input type="text" name="address" placeholder="주소를 입력하세요" required>
+    
+      <label>매물 크기 (평)</label>
+      <input type="number" name="size" placeholder="크기를 입력하세요" required>
+    
+      <label>방 정보</label>
+      <input type="number" name="room_count" placeholder="방 수 입력" required>
+      <div class="radio-group">
+        <label><input type="radio" name="room_type" value="오픈형" required> 오픈형</label>
+        <label><input type="radio" name="room_type" value="분리형" required> 분리형</label>
+      </div>
+    
+      <label>거래정보</label>
+      <div class="radio-group">
+        <label><input type="radio" name="deal_type" value="전세" required> 전세</label>
+        <label><input type="radio" name="deal_type" value="월세" required> 월세</label>
+      </div>
+    
+      <label>가격정보 (만원)</label>
+      <input type="number" name="price" placeholder="가격 입력" required>
+    
+      <label>공용관리비</label>
+      <div class="radio-group">
+        <label><input type="radio" name="maintenance" value="없음" required> 없음</label>
+        <label><input type="radio" name="maintenance" value="있음" required> 있음</label>
+      </div>
+      <input type="number" name="maintenance_fee" placeholder="관리비 입력 (원)">
+    
+      <label>입주 가능일자</label>
+      <div class="radio-group">
+        <label><input type="radio" name="move_in" value="즉시입주" required> 즉시입주</label>
+        <label><input type="radio" name="move_in" value="일자선택" required> 일자선택</label>
+      </div>
+      <input type="date" name="move_in_date">
+    
+      <label>층 수</label>
+      <input type="number" name="floor" placeholder="전체 층 수 입력" required>
+    
+      <label>욕실 수</label>
+      <input type="number" name="bathroom_count" placeholder="욕실 수 입력" required>
+    
+      <label>엘리베이터</label>
+      <div class="radio-group">
+        <label><input type="radio" name="elevator" value="없음" required> 없음</label>
+        <label><input type="radio" name="elevator" value="있음" required> 있음</label>
+      </div>
+    
+      <label>주차 가능 여부</label>
+      <div class="radio-group">
+        <label><input type="radio" name="parking" value="불가능" required> 불가능</label>
+        <label><input type="radio" name="parking" value="가능" required> 가능</label>
+      </div>
+      <input type="number" name="parking_count" placeholder="총 가능 주차 수 입력">
+    
+      <label>시설정보 (난방시설)</label>
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="heating" value="개별난방"> 개별난방</label>
+        <label><input type="checkbox" name="heating" value="중앙난방"> 중앙난방</label>
+        <label><input type="checkbox" name="heating" value="지역난방"> 지역난방</label>
+      </div>
+    
+      <label>사진 등록</label>
+      <input type="file" name="images" multiple>
+      <label>이미지 URL 등록 (최대 4개)</label>
+      <input type="url" name="image_url_1" placeholder="이미지 URL 1">
+      <input type="url" name="image_url_2" placeholder="이미지 URL 2">
+      <input type="url" name="image_url_3" placeholder="이미지 URL 3">
+      <input type="url" name="image_url_4" placeholder="이미지 URL 4">
+
+      <label>상세설명</label>
+      <input type="text" name="title" placeholder="제목 (40자 이내)" maxlength="40" required>
+      <textarea name="description" placeholder="상세 설명 (1000자 이내)" maxlength="1000" required></textarea>
+    
+      <label>위치좌표</label>
+      <input type="number" name="latitude" step="any" placeholder="위도를 입력하세요" required>
+      <input type="number" name="longitude" step="any" placeholder="경도를 입력하세요" required>
+          
+      <button type="submit">매물 등록</button>
+    </form>
+    
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Raon Real Estate. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

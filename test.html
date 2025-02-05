@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>카카오맵 API 예시</title>
+    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=2a96e8c7f34118ee8663f576a32bc302&libraries=services"></script>
+    <style>
+        /* 지도 크기 */
+        #map {
+            width: 70%;
+            height: 500px;
+            float: left;
+        }
+        /* 사이드바 스타일 */
+        #sidebar {
+            width: 30%;
+            height: 500px;
+            float: left;
+            padding: 10px;
+            box-sizing: border-box;
+            overflow-y: scroll;
+            background-color: #f7f7f7;
+        }
+        #sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        #sidebar ul li {
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+    <script>
+        var map;
+        var markers = [];
+
+        function initMap() {
+            var container = document.getElementById('map');
+            var options = {
+                center: new kakao.maps.LatLng(33.450701, 126.570667),
+                level: 3
+            };
+            map = new kakao.maps.Map(container, options);
+
+            var savedPlaces = [
+                {lat: 33.450701, lng: 126.570667, name: "장소 1"},
+                {lat: 33.451701, lng: 126.571667, name: "장소 2"},
+                {lat: 33.452701, lng: 126.572667, name: "장소 3"}
+            ];
+
+            // 장소에 마커 표시
+            for (var i = 0; i < savedPlaces.length; i++) {
+                var place = savedPlaces[i];
+                var markerPosition = new kakao.maps.LatLng(place.lat, place.lng);
+                var marker = new kakao.maps.Marker({
+                    position: markerPosition
+                });
+                markers.push(marker);
+                marker.setMap(map);
+
+                // 사이드바에 장소 목록 표시
+                var listItem = document.createElement('li');
+                listItem.innerHTML = place.name;
+                listItem.onclick = (function(marker) {
+                    return function() {
+                        map.setCenter(marker.getPosition());  // 클릭 시 해당 장소로 지도 이동
+                    };
+                })(marker);
+
+                document.getElementById('placeList').appendChild(listItem);
+            }
+        }
+
+        window.onload = initMap;
+    </script>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="sidebar">
+        <h3>저장된 장소 목록</h3>
+        <ul id="placeList"></ul>
+    </div>
+</body>
+</html>

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>라온부동산 - 제품 페이지</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
+      rel="stylesheet"
+    />
+    <style>
+      /* CSS Variables */
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #3498db;
+        --accent-color: #e74c3c;
+        --background-color: #f8f9fa;
+        --text-color: #2c3e50;
+        --border-radius: 8px;
+        --transition: all 0.3s ease;
+        --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      /* Reset & Base Styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Pretendard", "Apple SD Gothic Neo", sans-serif;
+        line-height: 1.6;
+        color: var(--text-color);
+        background-color: var(--background-color);
+      }
+      /* Header Styles */
+      .header {
+        background: white;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        box-shadow: var(--shadow);
+      }
+      .header-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+      }
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        text-decoration: none;
+      }
+      /* Navigation Menu 기본 스타일 */
+      .nav-menu {
+        list-style: none;
+        gap: 1.5rem;
+        display: flex;
+        align-items: center;
+      }
+      .nav-menu li {
+        position: relative;
+      }
+      .nav-link {
+        color: var(--text-color);
+        text-decoration: none;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+        display: block;
+      }
+      .nav-link:hover {
+        background-color: var(--secondary-color);
+        color: white;
+      }
+      /* 드롭다운 메뉴 스타일 */
+      .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        display: none;
+        min-width: 150px;
+        z-index: 1000;
+      }
+      .dropdown-menu li {
+        display: block;
+      }
+      .dropdown-menu .nav-link {
+        padding: 0.5rem 1rem;
+      }
+      /* 데스크탑: 마우스 오버시 드롭다운 보임 */
+      @media (min-width: 769px) {
+        .nav-menu li:hover > .dropdown-menu {
+          display: block;
+        }
+        .hamburger-menu {
+          display: none;
+        }
+      }
+      /* 모바일: 네비게이션 토글 및 드롭다운 메뉴 */
+      @media (max-width: 768px) {
+        .nav-menu {
+          flex-direction: column;
+          position: absolute;
+          top: 70px;
+          right: 0;
+          width: 100%;
+          background: white;
+          box-shadow: var(--shadow);
+          overflow: hidden;
+          max-height: 0;
+          opacity: 0;
+          transform: translateY(-10px);
+          transition: max-height 0.3s ease, opacity 0.3s ease,
+            transform 0.3s ease;
+          padding: 0 1rem;
+        }
+        .nav-menu.active {
+          max-height: 1000px; /* 충분한 높이 */
+          opacity: 1;
+          transform: translateY(0);
+          padding: 1rem 0;
+        }
+        .nav-menu li {
+          width: 100%;
+          text-align: center;
+          margin: 0.5rem 0;
+        }
+        /* 모바일 드롭다운: 클릭 시 토글 */
+        .dropdown-menu {
+          position: static;
+          box-shadow: none;
+          display: none;
+          max-height: 0;
+          overflow: hidden;
+          transition: max-height 0.3s ease;
+        }
+        .dropdown-active {
+          display: block;
+          max-height: 300px; /* 충분한 높이 */
+        }
+        .hamburger-menu {
+          display: block;
+          cursor: pointer;
+          font-size: 1.5rem;
+        }
+      }
+      /* 햄버거 메뉴 애니메이션 */
+      .hamburger-menu i {
+        transition: transform 0.3s ease;
+      }
+      .hamburger-menu.open i {
+        transform: rotate(90deg);
+      }
+      /* 제품 리스트 섹션 */
+      .product-list-section {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 2rem;
+      }
+      .section-title {
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 2rem;
+        color: var(--primary-color);
+      }
+      .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+      }
+      .product-card {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        transition: var(--transition);
+        display: flex;
+        flex-direction: column;
+      }
+      .product-card:hover {
+        transform: translateY(-5px);
+      }
+      .product-image {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+      }
+      .product-info {
+        padding: 1rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .product-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+      .product-price {
+        color: var(--accent-color);
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+      .product-desc {
+        font-size: 0.9rem;
+        color: #555;
+        margin-bottom: 1rem;
+        flex-grow: 1;
+      }
+      .product-btn {
+        text-align: center;
+        background-color: var(--secondary-color);
+        color: white;
+        padding: 0.5rem;
+        text-decoration: none;
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+      }
+      .product-btn:hover {
+        background-color: var(--primary-color);
+      }
+      /* Footer */
+      .footer {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 3rem 1rem;
+      }
+      .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+      }
+      .footer-bottom {
+        text-align: center;
+        padding-top: 2rem;
+        margin-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
+      }
+      .footer-links a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+      }
+      .footer-links a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+          <a href="#" class="logo">라온부동산</a>
+          <nav>
+            <ul class="nav-menu" id="gnb-menu">
+              <li><a href="#" class="nav-link">홈</a></li>
+              <li>
+                <a href="#" class="nav-link">매물</a>
+                <ul class="dropdown-menu">
+                  <li><a href="#" class="nav-link">매매</a></li>
+                  <li><a href="#" class="nav-link">분양</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="nav-link">임대</a>
+                <ul class="dropdown-menu">
+                  <li><a href="#" class="nav-link">전세</a></li>
+                  <li><a href="#" class="nav-link">월세</a></li>
+                </ul>
+              </li>
+              <li><a href="#" class="nav-link">문의하기</a></li>
+              <li><a href="#" class="nav-link">커뮤니티</a></li>
+              <li><a href="#" class="nav-link">로그인</a></li>
+            </ul>
+          </nav>
+          <div class="hamburger-menu" id="hamburger-menu" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+          </div>
+        </div>
+      </header>
+
+    <!-- Hero Section (제품 페이지용 간단 배너) -->
+    <section class="hero" data-aos="fade-up">
+      <div class="hero-content">
+        <h1 class="hero-title">최신 매물 소개</h1>
+        <p class="hero-subtitle">다양한 부동산 매물을 한눈에 확인하세요</p>
+      </div>
+    </section>
+
+    <!-- 제품 리스트 섹션 -->
+    <section class="product-list-section" data-aos="fade-up">
+      <h2 class="section-title">매물 목록</h2>
+      <label for="property-type">부동산 유형 선택:</label>
+      <select id="property-type" name="property-type">
+        <option value="all">전체</option>
+        <option value="one-room">원룸</option>
+        <option value="two-room">투룸</option>
+        <option value="apartment">아파트</option>
+        <option value="officetel">오피스텔</option>
+      </select>
+      <div class="product-grid">
+        <!-- 제품 카드 1 -->
+        <div class="product-card" data-aos="fade-up" data-type="one-room">
+          <img
+            src="/api/placeholder/400/300"
+            alt="제품 1"
+            class="product-image"
+          />
+          <div class="product-info" data-type="apartment">
+            <div>
+              <h3 class="product-title">강남구 신축 아파트</h3>
+              <div class="product-price">12억원</div>
+              <p class="product-desc">85㎡, 남향, 역세권 위치의 최신 아파트.</p>
+            </div>
+            <a href="tel:0212345678" class="product-btn">자세히보기</a>
+          </div>
+        </div>
+        <!-- 제품 카드 2 -->
+        <div class="product-card" data-aos="fade-up" data-aos-delay="100" data-type="officetel">
+          <img
+            src="/api/placeholder/400/300"
+            alt="제품 2"
+            class="product-image"
+          />
+          <div class="product-info">
+            <div>
+              <h3 class="product-title">마포구 오피스텔</h3>
+              <div class="product-price">3억원</div>
+              <p class="product-desc">45㎡, 풀옵션, 마포 중심의 효율적 공간.</p>
+            </div>
+            <a href="tel:0212345678" class="product-btn">자세히보기</a>
+          </div>
+        </div>
+        <!-- 제품 카드 3 -->
+        <div class="product-card" data-aos="fade-up" data-aos-delay="200" data-type="officetel">
+          <img
+            src="/api/placeholder/400/300"
+            alt="제품 3"
+            class="product-image"
+          />
+          <div class="product-info" data-type="two-room">
+            <div>
+              <h3 class="product-title">송파구 상가</h3>
+              <div class="product-price">20억원</div>
+              <p class="product-desc">120㎡, 1층, 대로변 위치의 상업용 매물.</p>
+            </div>
+            <a href="tel:0212345678" class="product-btn">자세히보기</a>
+          </div>
+        </div>
+        <!-- 제품 카드 4 -->
+        <div class="product-card" data-aos="fade-up" data-aos-delay="300" data-type="apartment">
+          <img
+            src="/api/placeholder/400/300"
+            alt="제품 4"
+            class="product-image"
+          />
+          <div class="product-info">
+            <div>
+              <h3 class="product-title">인천 신도시 아파트</h3>
+              <div class="product-price">8억원</div>
+              <p class="product-desc">
+                넓은 평수와 최신 시설을 갖춘 인천 아파트.
+              </p>
+            </div>
+            <a href="tel:0212345678" class="product-btn">자세히보기</a>
+          </div>
+        </div>
+        <!-- 제품 카드 5 -->
+        <div class="product-card" data-aos="fade-up" data-aos-delay="400" data-type="officetel">
+          <img
+            src="/api/placeholder/400/300"
+            alt="제품 5"
+            class="product-image"
+          />
+          <div class="product-info">
+            <div>
+              <h3 class="product-title">부산 해운대 빌라</h3>
+              <div class="product-price">5억원</div>
+              <p class="product-desc">
+                아름다운 바다 전망과 편리한 생활 인프라.
+              </p>
+            </div>
+            <a href="tel:0212345678" class="product-btn">자세히보기</a>
+          </div>
+        </div>
+        <!-- 제품 카드 6 -->
+        <div class="product-card" data-aos="fade-up" data-aos-delay="500" data-type="officetel">
+          <img
+            src="/api/placeholder/400/300"
+            alt="제품 6"
+            class="product-image"
+          />
+          <div class="product-info">
+            <div>
+              <h3 class="product-title">대전 도심 오피스</h3>
+              <div class="product-price">7억원</div>
+              <p class="product-desc">
+                비즈니스 환경에 최적화된 도심 오피스 공간.
+              </p>
+            </div>
+            <a href="tel:0212345678" class="product-btn">자세히보기</a>
+          </div>
+        </div>
+        <!-- 제품 카드 7 -->
+        <div class="product-card" data-aos="fade-up" data-aos-delay="600" data-type="one-room">
+          <img
+            src="/api/placeholder/400/300"
+            alt="제품 7"
+            class="product-image"
+          />
+          <div class="product-info">
+            <div>
+              <h3 class="product-title">경기 분양 신축 주택</h3>
+              <div class="product-price">10억원</div>
+              <p class="product-desc">
+                넓은 주거 공간과 우수한 학군을 갖춘 분양 매물.
+              </p>
+            </div>
+            <a href="tel:0212345678" class="product-btn">자세히보기</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-links">
+          <a href="#">이용약관</a>
+          <a href="#">개인정보처리방침</a>
+          <a href="#">매물신고운영</a>
+          <a href="#">부동산 고객센터</a>
+        </div>
+        <p>
+          네이버파이낸셜(주)가 제공하는 부동산 정보는 각 콘텐츠 제공업체로부터
+          받는 정보로 참고용입니다. 정보의 정확성이나 신뢰성을 보증하지 않으며,
+          서비스 이용의 결과에 대해 어떠한 법적 책임도 지지 않습니다.
+        </p>
+        <p>
+          게시된 정보는 무단 복제·배포·전송(반복적이거나 특정 목적을 위한
+          체계적인 것을 포함)을 금지하며, 이를 무단 이용하는 경우 법적 책임을 질
+          수 있습니다.
+        </p>
+        <div class="footer-bottom">
+          &copy; 2025 라온부동산. All Rights Reserved.
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+      // Initialize AOS (Animate On Scroll)
+      AOS.init({
+        duration: 800,
+        easing: "ease-in-out",
+        once: true,
+        offset: 100,
+      });
+
+      // Smooth scrolling for navigation links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          document
+            .querySelector(this.getAttribute("href"))
+            .scrollIntoView({ behavior: "smooth" });
+        });
+      });
+
+      // 데스크탑: 스크롤 시 nav-menu 숨김/보임 처리
+      let prevScrollPos = window.pageYOffset;
+      window.addEventListener("scroll", function () {
+        if (window.innerWidth >= 769) {
+          const gnbMenu = document.getElementById("gnb-menu");
+          let currentScrollPos = window.pageYOffset;
+          if (prevScrollPos > currentScrollPos) {
+            gnbMenu.classList.remove("scroll-hidden");
+          } else {
+            gnbMenu.classList.add("scroll-hidden");
+          }
+          prevScrollPos = currentScrollPos;
+        }
+      });
+
+      // 모바일: 햄버거 메뉴 토글 및 애니메이션 적용
+      function toggleMenu() {
+        const navMenu = document.getElementById("gnb-menu");
+        navMenu.classList.toggle("active");
+        const hamburgerMenu = document.getElementById("hamburger-menu");
+        hamburgerMenu.classList.toggle("open");
+      }
+
+      // 모바일: 드롭다운 메뉴 토글 (서브메뉴 클릭 시)
+      // 각 상위 메뉴에 이벤트를 추가하여 서브 메뉴 토글 기능 구현
+      if (window.innerWidth < 769) {
+        document.querySelectorAll(".nav-menu > li").forEach((item) => {
+          // 하위에 드롭다운 메뉴가 있는 경우만
+          const dropdown = item.querySelector(".dropdown-menu");
+          if (dropdown) {
+            item.addEventListener("click", function (e) {
+              // 상위 메뉴 링크의 기본 클릭 동작 방지 (하위 메뉴 토글)
+              e.preventDefault();
+              dropdown.classList.toggle("dropdown-active");
+            });
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

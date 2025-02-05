@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>매물 상세 정보</title>
+    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=2a96e8c7f34118ee8663f576a32bc302&libraries=services"></script>
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+        .container { max-width: 900px; margin: 20px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+        h1 { color: #333; }
+        .gallery { display: flex; gap: 10px; margin-bottom: 20px; }
+        .gallery img { height: 100px; width: 100px; border-radius: 8px; object-fit: cover; cursor: pointer; transition: transform 0.3s; }
+        .gallery img:hover { transform: scale(1.05); }
+        .main-image { width: 100%; height: 400px; border-radius: 8px; object-fit: cover; margin-bottom: 20px; }
+        .info { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .info div { background: #f9f9f9; padding: 15px; border-radius: 8px; }
+        .info p { margin: 8px 0; }
+        .highlight { font-weight: bold; color: #007bff; }
+        #map { width: 100%; height: 300px; border-radius: 10px; margin-top: 20px; }
+        .btn { display: block; background: #007bff; color: white; padding: 12px; text-align: center; border-radius: 8px; text-decoration: none; margin-top: 20px; transition: background 0.3s; }
+        .btn:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="title">매물 제목 로딩 중...</h1>
+        <!-- Main Image -->
+        <img id="mainImage" class="main-image" src="https://img.freepik.com/free-photo/empty-unfurnished-brand-new-apartment_181624-45321.jpg?t=st=1738651745~exp=1738655345~hmac=17ddba2595c686d1fbf836992cd9a7c45dffa8daa0ad0ef175390746464ff2da&w=1380" alt="Main Image">
+
+        <!-- Image Gallery (Sub-images) -->
+        <div class="gallery" id="imageGallery">
+            <img src="https://img.freepik.com/free-photo/empty-unfurnished-brand-new-apartment_181624-45321.jpg?t=st=1738651745~exp=1738655345~hmac=17ddba2595c686d1fbf836992cd9a7c45dffa8daa0ad0ef175390746464ff2da&w=1380" alt="서브 이미지 1" onclick="changeImage(this)">
+            <img src="https://img.freepik.com/free-photo/abstract-blur-room-interior-background_74190-4872.jpg?t=st=1738651775~exp=1738655375~hmac=650d60710c14c6234ccefb8bde4bc0bbe4936edc103a159c99efc85be8581be4&w=1380" alt="서브 이미지 2" onclick="changeImage(this)">
+            <img src="https://img.freepik.com/free-photo/minimal-amazing-interior-design_23-2150534552.jpg?t=st=1738651818~exp=1738655418~hmac=5daec895fe5832577a464e9cdeb6e6a2b155d306ea8259f9dc4598e724587da0&w=1380" alt="서브 이미지 3" onclick="changeImage(this)">
+            <img src="https://img.freepik.com/free-photo/beer-concept_23-2147790659.jpg?t=st=1738651795~exp=1738655395~hmac=a33df517bf7930a10824cfc70fe6a6f918f911a79cc32d9475b5f8bfc7ec0720&w=1380" alt="서브 이미지 4" onclick="changeImage(this)">
+        </div>
+
+        <!-- Property Info -->
+        <div class="info">
+            <div>
+                <p><strong>주소:</strong> <span id="address">서울특별시 강남구 테헤란로 123</span></p>
+                <p><strong>가격:</strong> <span class="highlight" id="price">250,000,000 원</span></p>
+                <p><strong>면적:</strong> <span id="size">45</span> ㎡</p>
+                <p><strong>방/욕실:</strong> <span id="room_bathroom">2개 / 1개</span></p>
+            </div>
+            <div>
+                <p><strong>거래 유형:</strong> <span id="dealType">매매</span></p>
+                <p><strong>입주 가능일:</strong> <span id="moveInDate">2024-06-01</span></p>
+                <p><strong>엘리베이터:</strong> <span id="elevator">있음</span></p>
+                <p><strong>주차 가능:</strong> <span id="parking">가능</span></p>
+            </div>
+        </div>
+
+        <h2>상세 설명</h2>
+        <p id="description">이 아파트는 탁월한 교통 편의성과 쾌적한 주거 환경을 제공합니다. 남향으로 채광이 좋으며 최신 인테리어로 꾸며져 있습니다.</p>
+
+        <!-- Kakao Map -->
+        <div id="map"></div>
+        <a href="#" class="btn">문의하기</a>
+    </div>
+
+    <script>
+        // 처음 로드될 때 첫 번째 이미지를 메인 이미지로 설정
+        window.onload = function() {
+            var firstImage = document.querySelector('.gallery img');
+            document.getElementById('mainImage').src = firstImage.src;
+        };
+
+        // 이미지 클릭 시 큰 이미지 변경
+        function changeImage(imgElement) {
+            document.getElementById('mainImage').src = imgElement.src;
+        }
+
+        // 카카오 지도 설정
+        var map;
+
+        function initMap() {
+            var container = document.getElementById('map');
+            var options = {
+                center: new kakao.maps.LatLng(33.450701, 126.570667),
+                level: 3
+            };
+            map = new kakao.maps.Map(container, options);
+
+            var savedPlaces = [
+                {lat: 33.450701, lng: 126.570667, name: "장소 1"},
+                {lat: 33.451701, lng: 126.571667, name: "장소 2"},
+                {lat: 33.452701, lng: 126.572667, name: "장소 3"}
+            ];
+
+            // 장소에 마커 표시
+            for (var i = 0; i < savedPlaces.length; i++) {
+                var place = savedPlaces[i];
+                var markerPosition = new kakao.maps.LatLng(place.lat, place.lng);
+                var marker = new kakao.maps.Marker({
+                    position: markerPosition
+                });
+                marker.setMap(map);
+
+                // 사이드바에 장소 목록 표시
+                var listItem = document.createElement('li');
+                listItem.innerHTML = place.name;
+                listItem.onclick = (function(marker) {
+                    return function() {
+                        map.setCenter(marker.getPosition());  // 클릭 시 해당 장소로 지도 이동
+                    };
+                })(marker);
+
+                document.getElementById('placeList').appendChild(listItem);
+            }
+        }
+
+        window.onload = initMap;
+    </script>
+</body>
+</html>

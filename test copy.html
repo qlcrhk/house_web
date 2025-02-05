@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>라온부동산</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+  <style>
+    /* CSS Variables */
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #3498db;
+      --accent-color: #e74c3c;
+      --background-color: #f8f9fa;
+      --text-color: #2c3e50;
+      --border-radius: 8px;
+      --transition: all 0.3s ease;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Reset & Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+      line-height: 1.6;
+      color: var(--text-color);
+      background-color: var(--background-color);
+    }
+
+    /* Header Styles */
+    .header {
+      background: white;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      box-shadow: var(--shadow);
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+
+    /* Navigation Menu 기본 스타일 */
+    .nav-menu {
+      list-style: none;
+      gap: 2rem;
+    }
+
+    .nav-menu li {
+      display: inline-block;
+    }
+
+    .nav-link {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+    }
+
+    .nav-link:hover {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+
+    /* 데스크탑: nav-menu 보임 및 스크롤 숨김 클래스 적용 */
+    @media (min-width: 769px) {
+      .nav-menu {
+        display: flex;
+      }
+      /* 스크롤 시 숨기기 위한 클래스 (display: none) */
+      .scroll-hidden {
+        display: none;
+      }
+      /* 햄버거 메뉴는 데스크탑에서 숨김 */
+      .hamburger-menu {
+        display: none;
+      }
+    }
+
+    /* 모바일: nav-menu 애니메이션 적용 */
+    @media (max-width: 768px) {
+      .nav-menu {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 70px; /* 헤더 하단 위치 */
+        right: 0;
+        width: 100%;
+        background: white;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        /* 초기 상태: 메뉴는 위로 약간 올라가 있고, 보이지 않음 */
+        max-height: 0;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: max-height 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+        padding: 0 1rem; /* 좌우 패딩만 적용 */
+      }
+      /* active 클래스가 있으면 보임 */
+      .nav-menu.active {
+        max-height: 500px; /* 충분한 높이 */
+        opacity: 1;
+        transform: translateY(0);
+        padding: 1rem 0; /* 메뉴 항목에 위아래 여백 추가 */
+      }
+      .nav-menu li {
+        display: block;
+        text-align: center;
+        margin: 0.5rem 0;
+      }
+      .hamburger-menu {
+        display: block;
+        cursor: pointer;
+        font-size: 1.5rem;
+      }
+    }
+
+    /* 햄버거 메뉴 애니메이션 */
+    .hamburger-menu i {
+      transition: transform 0.3s ease;
+    }
+    .hamburger-menu.open i {
+      transform: rotate(90deg);
+    }
+
+    /* Hero Section */
+    .hero {
+      height: 80vh;
+      background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/api/placeholder/1920/1080');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 70px;
+      color: white;
+      text-align: center;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      padding: 2rem;
+    }
+
+    .hero-title {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Search Section */
+    .search-section {
+      margin: -50px auto 0;
+      max-width: 1000px;
+      padding: 2rem;
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      position: relative;
+      z-index: 2;
+    }
+
+    .search-form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .search-input {
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+    }
+
+    .search-button {
+      background-color: var(--secondary-color);
+      color: white;
+      border: none;
+      padding: 1rem;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .search-button:hover {
+      background-color: var(--primary-color);
+    }
+
+    /* Category Section */
+    .category-section {
+      padding: 4rem 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2rem;
+      color: var(--primary-color);
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .category-card {
+      background: white;
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      text-align: center;
+      transition: var(--transition);
+    }
+
+    .category-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .category-icon {
+      font-size: 2.5rem;
+      color: var(--secondary-color);
+      margin-bottom: 1rem;
+    }
+
+    /* Property Listings */
+    .listings-section {
+      padding: 4rem 1rem;
+      background-color: white;
+    }
+
+    .listings-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .property-card {
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    .property-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .property-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .property-info {
+      padding: 1.5rem;
+    }
+
+    .property-price {
+      color: var(--accent-color);
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Location Section */
+    .location-section {
+      padding: 4rem 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .location-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .map-container {
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      height: 400px;
+    }
+
+    .contact-info {
+      padding: 2rem;
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+    }
+
+    /* Footer */
+    .footer {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 3rem 1rem;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 2rem;
+      margin-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .footer-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+          <a href="#" class="logo">라온부동산</a>
+          <nav>
+            <ul class="nav-menu" id="gnb-menu">
+              <li><a href="#" class="nav-link">홈</a></li>
+              <li>
+                <a href="#" class="nav-link">매물</a>
+                <ul class="dropdown-menu">
+                  <li><a href="#" class="nav-link">매매</a></li>
+                  <li><a href="#" class="nav-link">분양</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#" class="nav-link">임대</a>
+                <ul class="dropdown-menu">
+                  <li><a href="#" class="nav-link">전세</a></li>
+                  <li><a href="#" class="nav-link">월세</a></li>
+                </ul>
+              </li>
+              <li><a href="#" class="nav-link">문의</a></li>
+              <li><a href="#" class="nav-link">로그인</a></li>
+            </ul>
+          </nav>
+          <div class="hamburger-menu" id="hamburger-menu" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+          </div>
+        </div>
+      </header>
+
+  <section class="hero">
+    <div class="hero-content" data-aos="fade-up">
+      <h1 class="hero-title">당신의 꿈의 집을 찾아보세요</h1>
+      <p class="hero-subtitle">최고의 부동산 전문가와 함께 시작하세요</p>
+    </div>
+  </section>
+
+  <section class="search-section" data-aos="fade-up">
+    <form class="search-form">
+      <input type="text" class="search-input" placeholder="지역명">
+      <select class="search-input">
+        <option>매매</option>
+        <option>전세</option>
+        <option>월세</option>
+      </select>
+      <input type="number" class="search-input" placeholder="예산">
+      <button type="submit" class="search-button">검색</button>
+    </form>
+  </section>
+
+  <section class="category-section">
+    <h2 class="section-title" data-aos="fade-up">매물 카테고리</h2>
+    <div class="category-grid">
+      <div class="category-card" data-aos="fade-up">
+        <i class="fas fa-building category-icon"></i>
+        <h3>아파트/오피스텔</h3>
+        <p>신축 및 구축 아파트, 오피스텔 매물</p>
+      </div>
+      <div class="category-card" data-aos="fade-up" data-aos-delay="100">
+        <i class="fas fa-home category-icon"></i>
+        <h3>원룸/투룸</h3>
+        <p>실속있는 소형 주택</p>
+      </div>
+      <div class="category-card" data-aos="fade-up" data-aos-delay="200">
+        <i class="fas fa-store category-icon"></i>
+        <h3>상가/업무/토지</h3>
+        <p>수익형 부동산</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="listings-section">
+    <h2 class="section-title" data-aos="fade-up">인기 매물</h2>
+    <div class="listings-grid">
+      <div class="property-card" data-aos="fade-up">
+        <img src="/api/placeholder/400/300" alt="Property 1" class="property-image">
+        <div class="property-info">
+          <div class="property-price">12억원</div>
+          <h3>강남구 신축 아파트</h3>
+          <p>85㎡, 남향, 역세권</p>
+        </div>
+      </div>
+      <div class="property-card" data-aos="fade-up" data-aos-delay="100">
+        <img src="/api/placeholder/400/300" alt="Property 2" class="property-image">
+        <div class="property-info">
+          <div class="property-price">3억원</div>
+          <h3>마포구 신축 오피스텔</h3>
+          <p>45㎡, 풀옵션</p>
+        </div>
+      </div>
+      <div class="property-card" data-aos="fade-up" data-aos-delay="200">
+        <img src="/api/placeholder/400/300" alt="Property 3" class="property-image">
+        <div class="property-info">
+          <div class="property-price">20억원</div>
+          <h3>송파구 상가</h3>
+          <p>120㎡, 1층, 대로변</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="listings-section">
+    <h2 class="section-title" data-aos="fade-up">최신 매물</h2>
+    <div class="listings-grid">
+      <div class="property-card" data-aos="fade-up">
+        <img src="/api/placeholder/400/300" alt="Property 1" class="property-image">
+        <div class="property-info">
+          <div class="property-price">12억원</div>
+          <h3>강남구 신축 아파트</h3>
+          <p>85㎡, 남향, 역세권</p>
+        </div>
+      </div>
+      <div class="property-card" data-aos="fade-up" data-aos-delay="100">
+        <img src="/api/placeholder/400/300" alt="Property 2" class="property-image">
+        <div class="property-info">
+          <div class="property-price">3억원</div>
+          <h3>마포구 신축 오피스텔</h3>
+          <p>45㎡, 풀옵션</p>
+        </div>
+      </div>
+      <div class="property-card" data-aos="fade-up" data-aos-delay="200">
+        <img src="/api/placeholder/400/300" alt="Property 3" class="property-image">
+        <div class="property-info">
+          <div class="property-price">20억원</div>
+          <h3>송파구 상가</h3>
+          <p>120㎡, 1층, 대로변</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="location-section">
+    <h2 class="section-title" data-aos="fade-up">오시는 길</h2>
+    <div class="location-grid">
+      <div class="map-container" data-aos="fade-right">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3164.9557683612356!2d127.02762121530878!3d37.49808597981201!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca18b2bfe4fb1%3A0x6f2e0f2dfbd5f7c0!2z6rSR7KO87Yq567OE7IucIOqzoOumrOq4sA!5e0!3m2!1sko!2skr!4v1646403206609!5m2!1sko!2skr" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+      </div>
+      <div class="contact-info" data-aos="fade-left">
+        <h3>라온부동산</h3>
+        <p><i class="fas fa-map-marker-alt"></i> 서울특별시 강남구 테헤란로 123</p>
+        <p><i class="fas fa-phone"></i> 02-1234-5678</p>
+        <p><i class="fas fa-envelope"></i> contact@raon.co.kr</p>
+        <p><i class="fas fa-clock"></i> 평일 09:00 - 18:00</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="#">이용약관</a>
+        <a href="#">개인정보처리방침</a>
+        <a href="#">매물신고운영</a>
+        <a href="#">부동산 고객센터</a>
+      </div>
+      <p>네이버파이낸셜(주)가 제공하는 부동산 정보는 각 콘텐츠 제공업체로부터 받는 정보로 참고용입니다. 정보의 정확성이나 신뢰성을 보증하지 않으며, 서비스 이용의 결과에 대해서 어떠한 법적인 책임을 지지 않습니다.</p>
+      <p>게시된 정보는 무단 복제·배포·전송(반복적이거나 특정 목적을 위한 체계적인 것을 포함합니다) 등 이용할 수 없으며, 이를 무단 이용하는 경우 저작권법 등에 따라 법적 책임을 질 수 있습니다.</p>
+      <div class="footer-bottom">
+        &copy; 2025 라온부동산. All Rights Reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script>
+    // Initialize AOS (Animate On Scroll)
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: true,
+      offset: 100
+    });
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // Search form handling
+    document.querySelector('.search-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Get form values
+      const locationVal = this.querySelector('input[type="text"]').value;
+      const typeVal = this.querySelector('select').value;
+      const budgetVal = this.querySelector('input[type="number"]').value;
+
+      // Validate form
+      if (!locationVal || !budgetVal) {
+        alert('모든 필드를 입력해주세요.');
+        return;
+      }
+
+      // Show search results (example)
+      alert(`검색 조건:\n지역: ${locationVal}\n거래 유형: ${typeVal}\n예산: ${budgetVal}원`);
+    });
+
+    // 데스크탑: 스크롤 시 nav-menu 숨김/보임 처리
+    let prevScrollPos = window.pageYOffset;
+    window.addEventListener('scroll', function() {
+      // 데스크탑에서만 스크롤 hide 기능 적용 (화면 너비 769px 이상)
+      if (window.innerWidth >= 769) {
+        const gnbMenu = document.getElementById('gnb-menu');
+        let currentScrollPos = window.pageYOffset;
+        if (prevScrollPos > currentScrollPos) {
+          // 스크롤 올릴 때 nav-menu 보임
+          gnbMenu.classList.remove('scroll-hidden');
+        } else {
+          // 스크롤 내릴 때 nav-menu 숨김
+          gnbMenu.classList.add('scroll-hidden');
+        }
+        prevScrollPos = currentScrollPos;
+      }
+    });
+
+    // 모바일: 햄버거 메뉴 토글 및 애니메이션 적용
+    function toggleMenu() {
+      const navMenu = document.getElementById('gnb-menu');
+      navMenu.classList.toggle('active');
+
+      // 햄버거 메뉴 아이콘에 애니메이션 효과 적용
+      const hamburgerMenu = document.getElementById('hamburger-menu');
+      hamburgerMenu.classList.toggle('open');
+    }
+  </script>
+</body>
+</html>
